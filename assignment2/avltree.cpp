@@ -1,4 +1,11 @@
-//avl tree
+// Name: Diya Goyal
+// Roll no: 102215255
+// Question: Write a program for AVL tree having functions for the following operations:
+// Insert an element (no duplicates are allowed),
+// Delete an existing element,
+// Traverse the AVL (in-order, pre- order, and post-order),
+// Right rotation, and Left rotation.
+// Acknowledgement: took help from GitHub Copilot
 #include <bits/stdc++.h>
 using namespace std;
 
