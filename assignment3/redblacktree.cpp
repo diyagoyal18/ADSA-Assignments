@@ -1,132 +1,126 @@
-// red black tree
-#include <iostream>     // Provides basic I/O functionality
-#include <memory>       // Provides smart pointers if needed
+// Name: Diya Goyal
+// Roll no: 102215255
+// Question:  Write a program for Red-Black (RB) tree having functions for the following operations:
+// Insert an element (no duplicates are allowed),
+// Delete an existing element,                
+// Traverse the RB (in- order, pre-order, and post-order),            
+// Right rotation, and Left rotation.
+// Acknowledgement: took help from GitHub Copilot and geeks for geeks
 
-using namespace std;    // Allows direct use of standard library objects
 
-enum Color { RED, BLACK };  // Defines two node colors
+#include <iostream>
+#include <memory>
+using namespace std;
+
+enum Color { RED, BLACK };
 
 struct Node {
-    int data;                   // Stores the node's value
-    Color color;                // Stores the node's color (RED or BLACK)
-    Node* left;                 // Pointer to the left child
-    Node* right;                // Pointer to the right child
-    Node* parent;               // Pointer to the parent node
-
+    int data;
+    Color color;
+    Node* left;
+    Node* right;
+    Node* parent;
     Node(int val) : data(val), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
-    // Constructor initializes data and sets color as RED by default
 };
 
 class RedBlackTree {
 private:
-    Node* root; // Pointer to the root of the tree
+    Node* root;
 
     void leftRotate(Node* x) {
-        Node* y = x->right;         // y is the right child of x
-        x->right = y->left;         // Move y's left subtree to x's right
+        Node* y = x->right;
+        x->right = y->left;
         if (y->left != nullptr) {
-            y->left->parent = x;    // Update parent pointer
+            y->left->parent = x;
         }
-        y->parent = x->parent;      // Link y to x's former parent
+        y->parent = x->parent;
         if (x->parent == nullptr) {
-            root = y;               // y becomes root if x was root
+            root = y;
         } else if (x == x->parent->left) {
-            x->parent->left = y;    // If x was a left child, update that link
+            x->parent->left = y;
         } else {
-            x->parent->right = y;   // Otherwise update the right child link
+            x->parent->right = y;
         }
-        y->left = x;                // Put x on y's left
-        x->parent = y;             // Update x's parent
+        y->left = x;
+        x->parent = y;
     }
 
     void rightRotate(Node* x) {
-        Node* y = x->left;          // y is the left child of x
-        x->left = y->right;         // Move y's right subtree to x's left
+        Node* y = x->left;
+        x->left = y->right;
         if (y->right != nullptr) {
-            y->right->parent = x;   // Update parent pointer
+            y->right->parent = x;
         }
-        y->parent = x->parent;      // Link y to x's former parent
+        y->parent = x->parent;
         if (x->parent == nullptr) {
-            root = y;               // y becomes root if x was root
+            root = y;
         } else if (x == x->parent->right) {
-            x->parent->right = y;   // If x was a right child, update that link
+            x->parent->right = y;
         } else {
-            x->parent->left = y;    // Otherwise update the left child link
+            x->parent->left = y;
         }
-        y->right = x;               // Put x on y's right
-        x->parent = y;             // Update x's parent
+        y->right = x;
+        x->parent = y;
     }
 
     void fixInsertion(Node* z) {
-        // While parent's color is RED, we need to fix violations
         while (z->parent && z->parent->color == RED) {
-            // Check if parent is on the left side
             if (z->parent == z->parent->parent->left) {
-                Node* y = z->parent->parent->right;  // Uncle is parent's sibling
-                // Case 1: Uncle is RED
+                Node* y = z->parent->parent->right;
                 if (y && y->color == RED) {
-                    z->parent->color = BLACK;         // Recolor parent
-                    y->color = BLACK;                 // Recolor uncle
-                    z->parent->parent->color = RED;   // Recolor grandparent
-                    z = z->parent->parent;            // Move z up
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
                 } else {
-                    // Case 2: Uncle is BLACK and z is a right child
                     if (z == z->parent->right) {
-                        z = z->parent;                // Move z up
-                        leftRotate(z);                // Rotate
+                        z = z->parent;
+                        leftRotate(z);
                     }
-                    // Case 3: z is a left child
-                    z->parent->color = BLACK;         // Recolor parent
-                    z->parent->parent->color = RED;   // Recolor grandparent
-                    rightRotate(z->parent->parent);   // Rotate grandparent
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    rightRotate(z->parent->parent);
                 }
             } else {
-                // Parent is on right side
-                Node* y = z->parent->parent->left;   // Uncle is parent's sibling
-                // Case 1: Uncle is RED
+                Node* y = z->parent->parent->left;
                 if (y && y->color == RED) {
-                    z->parent->color = BLACK;         // Recolor parent
-                    y->color = BLACK;                 // Recolor uncle
-                    z->parent->parent->color = RED;   // Recolor grandparent
-                    z = z->parent->parent;            // Move z up
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
                 } else {
-                    // Case 2: Uncle is BLACK and z is a left child
                     if (z == z->parent->left) {
-                        z = z->parent;                // Move z up
-                        rightRotate(z);               // Rotate
+                        z = z->parent;
+                        rightRotate(z);
                     }
-                    // Case 3: z is a right child
-                    z->parent->color = BLACK;         // Recolor parent
-                    z->parent->parent->color = RED;   // Recolor grandparent
-                    leftRotate(z->parent->parent);    // Rotate grandparent
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    leftRotate(z->parent->parent);
                 }
             }
         }
-        root->color = BLACK; // Ensure root remains BLACK
+        root->color = BLACK;
     }
 
     void inorderHelper(Node* root) {
-        // Recursively traverse the tree in-order
         if (!root) return;
         inorderHelper(root->left);
-        cout << root->data << "(" << (root->color == RED ? "R" : "B") << ") ";
+        cout << root->data << (root->color == RED ? "(R) " : "(B) ");
         inorderHelper(root->right);
     }
 
 public:
-    RedBlackTree() : root(nullptr) {} // Constructor initializes root to null
+    RedBlackTree() : root(nullptr) {}
 
     void insert(int val) {
-        Node* newNode = new Node(val); // Create a new node
+        Node* newNode = new Node(val);
         if (!root) {
-            newNode->color = BLACK;    // Root is always BLACK
-            root = newNode;            // Set new node as root
+            newNode->color = BLACK;
+            root = newNode;
             return;
         }
-        Node* temp = root;            // Start from root
-        Node* parent = nullptr;       // Will track where new node should go
-
-        // Standard BST insertion
+        Node* temp = root;
+        Node* parent = nullptr;
         while (temp) {
             parent = temp;
             if (newNode->data < temp->data) {
@@ -135,26 +129,23 @@ public:
                 temp = temp->right;
             }
         }
-        newNode->parent = parent;     // Link new node to parent
+        newNode->parent = parent;
         if (newNode->data < parent->data) {
-            parent->left = newNode;   // Place new node as left child
+            parent->left = newNode;
         } else {
-            parent->right = newNode;  // Place new node as right child
+            parent->right = newNode;
         }
-
-        fixInsertion(newNode);        // Fix any red-black violations
+        fixInsertion(newNode);
     }
 
     void inorderTraversal() {
-        inorderHelper(root); // Perform in-order traversal
+        inorderHelper(root);
         cout << endl;
     }
 };
 
 int main() {
-    RedBlackTree rbTree;         // Create our red-black tree
-
-    // Insert sample data
+    RedBlackTree rbTree;
     rbTree.insert(10);
     rbTree.insert(18);
     rbTree.insert(7);
@@ -163,9 +154,7 @@ int main() {
     rbTree.insert(30);
     rbTree.insert(25);
     rbTree.insert(40);
-
     cout << "In-order Traversal: ";
-    rbTree.inorderTraversal();   // Print the tree in-order
-
-    return 0;                    // End of program
+    rbTree.inorderTraversal();
+    return 0;
 }
