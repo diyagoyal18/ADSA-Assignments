@@ -1,3 +1,9 @@
+// Name: Diya Goyal
+// Roll no: 102215255
+// Question:1. Write code to represent an undirected graph using both adjacency matrix and adjacency list. Implement basic operations like adding and removing edges, printing the graph, and checking for the existence of an edge between two nodes.
+ // a. Given a graph (represented as an adjacency list), implement the depth first search (DFS) and breadth first search (BFS) traversal starting from a specified node.
+ // b. Write a program to check if  a given graph is bipartite.
+// Acknowledgement: took help from GitHub Copilot 
 #include <iostream>
 #include <vector>
 #include <list>
